@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('created_by')->nullable();
+        Schema::create('shift_user', function (Blueprint $table) {
+            $table->integer('user_id');
+            $table->integer('shift_id');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('created_by');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('shift_user');
     }
 };

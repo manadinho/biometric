@@ -152,7 +152,7 @@
               <h3>User Managent</h3>
             </li>
             <li>
-              <a href="javascript:void(0)" onclick="requestHtml('users')" data-permission="USER_MANAGEMENT">
+              <a href="{{ route('users.index') }}" data-permission="USER_MANAGEMENT">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
@@ -164,7 +164,7 @@
                 </svg>
                 <span>Roles</span>
               </a>
-              <a href="javascript:void(0)" onclick="requestHtml('departments')" data-permission="ROLES_AND_PERMISSIONS">
+              <a href="{{ route('departments.index') }}" data-permission="ROLES_AND_PERMISSIONS">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
@@ -228,7 +228,7 @@
               </a>
             </li>
             <li>
-              <a href="javascript:void(0)" onclick="logout()">
+              <a href="{{ route('logout') }}">
                 <svg>
                   <use xlink:href="#logout"></use>
                 </svg>
