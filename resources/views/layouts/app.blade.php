@@ -170,7 +170,7 @@
                 </svg>
                 <span>Departments</span>
               </a>
-              <a href="javascript:void(0)" onclick="requestHtml('employee_transfer')" data-permission="ROLES_AND_PERMISSIONS">
+              <a href="{{ route('employee-transfers.index') }}" data-permission="ROLES_AND_PERMISSIONS">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>

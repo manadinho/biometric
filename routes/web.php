@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -48,6 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DepartmentController::class, 'index'])->name('index');
         Route::post('/store', [DepartmentController::class, 'store'])->name('store');
         Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+        Route::post('/users-by-department', [DepartmentController::class, 'getUsersByDepartment'])->name('users-by-department');
     });
 
     // USERS ROUTES
@@ -55,6 +57,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    // EMPLOYEE TRANSFER ROUTES
+    Route::group(['prefix' => 'employee-transfers', 'as' => 'employee-transfers.'], function(){
+        Route::get('/', [EmployeeTransferController::class, 'index'])->name('index');
+        Route::post('/', [EmployeeTransferController::class, 'action'])->name('action');
+        // Route::delete('/{employeeTransfer}', [EmployeeTransferController::class, 'destroy'])->name('destroy');
     });
 });
 

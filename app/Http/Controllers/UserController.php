@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,8 +12,9 @@ class UserController extends Controller
     public function index()
     {
         $roles = Role::all();
-        $users = User::with('roles')->get();
-        return view('users.index', ['roles' => $roles, 'users' => $users]);
+        $departments = Department::whereNull('parent_id')->get();
+        $users = User::with(['roles', 'department'])->get();
+        return view('users.index', compact('users', 'roles', 'departments'));
     }
 
     public function store()
@@ -22,6 +24,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:5',
             'roles' => 'required|array',
+            'department_id' => 'required|exists:departments,id'
         ];
 
         // if request has user_id it means we are going to update user
@@ -41,7 +44,7 @@ class UserController extends Controller
         if(request()->has('password')) {
             $data['password'] = bcrypt($data['password']);
         }
-
+        
         $user = User::updateOrCreate(['id' => request('user_id')], $data);
 
         $user->roles()->sync(request()->roles);

@@ -40,4 +40,18 @@ class DepartmentController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Department deleted successfully']);
     }
+
+    function getUsersByDepartment() 
+    {
+        $id = request('department_id');
+
+        $users = Department::find($id)->users;
+
+        // if users are not found
+        if ($users->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No user found']);
+        }
+
+        return response()->json(['success' => true, 'users' => $users]);
+    }
 }

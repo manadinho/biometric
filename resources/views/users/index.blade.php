@@ -28,6 +28,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Department</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -44,7 +45,7 @@
                                 No Role
                             @endforelse
                         </td>
-                        <td>
+                        <td>{{ $user->department->name }}<td>
                             <button class="den-close-button" onclick="removeUser('{{ $user->id }}')">X</button>
                             <button class="den-edit-button" onclick="editUser('{{ $user }}')">EDIT</button>
                         </td>
@@ -95,6 +96,18 @@
                     @endforelse
                 </select>
                 <!-- <div class="den-error">Error messages here</div> -->
+            </div>
+
+            <div class="den-form-group">
+                <label for="role">Select a Department</label>
+                <select name="department_id" class="den-select" id="department">
+                    <option value="">Select Department</option>
+                    @forelse($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @empty
+                        <option value="">No Departments Found</option>
+                    @endforelse
+                </select>
             </div>
 
             <div class="den-button-group">
@@ -161,6 +174,8 @@
                 option.selected = true;
             }
         });
+
+        document.querySelector('#department').value = user.department.id;
     }
 </script>
 
