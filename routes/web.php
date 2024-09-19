@@ -53,8 +53,8 @@ Route::middleware('auth')->group(function () {
     // USERS ROUTES
     Route::group(['prefix' => 'users', 'as' => 'users.'], function(){
         Route::get('/', [UserController::class, 'index'])->name('index');
-        // Route::post('/store', [UserController::class, 'store'])->name('store');
-        // Route::delete('/{role}', [UserController::class, 'destroy'])->name('destroy');
+        Route::post('/store', [UserController::class, 'store'])->name('store');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 });
 

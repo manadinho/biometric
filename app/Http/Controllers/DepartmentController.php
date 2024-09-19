@@ -20,6 +20,10 @@ class DepartmentController extends Controller
             'name' => 'required|string'
         ]);
 
+        if (!$data) {
+            return back()->withErrors($data);
+        }
+
         Department::updateOrCreate(['id' => request('department_id')], $data);
 
         return back()->with('success', 'Role created successfully');
