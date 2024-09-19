@@ -9,27 +9,31 @@ class DepartmentController extends Controller
 {
     function index() 
     {
-        $parentDepartments = Department::whereNull('parent_id')->get();
-        $departments = Department::whereNull('parent_id')
-        ->with('children', function($query){
-            $query->withCount('users');
-        })
-        ->get();
+        $departments = Department::whereNull('parent_id')->withCount('users')->get();
 
-        return view('departments.index', compact('departments', 'parentDepartments'));
+        return view('departments.index', compact('departments'));
     }
 
     function store()
     {
         $data = request()->validate([
-            'name' => 'required|string',
-            'parent_id' => 'nullable|exists:departments,id',
-        ], [
-            'parent_id.exists' => 'The selected parent department is invalid',
+            'name' => 'required|string'
         ]);
 
-        Department::updateOrCreate(['id' => request('id')], $data);
+        Department::updateOrCreate(['id' => request('department_id')], $data);
 
         return back()->with('success', 'Role created successfully');
+    }
+
+    function destroy(Department $department)
+    {
+        // check if department belongs to any user
+        if ($department->users()->exists()) {
+            return response()->json(['success' => false, 'message' => 'Department belongs to a user']);
+        }
+
+        $department->delete();
+
+        return response()->json(['success' => true, 'message' => 'Department deleted successfully']);
     }
 }

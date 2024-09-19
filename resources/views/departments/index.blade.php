@@ -28,19 +28,14 @@
             </thead>
             <tbody id="den-departments-table-body">
                 @forelse($departments as $department)
-                    <tr id="{{ $department->id }}-row" class="parent-dep-row">
-                        <td colspan="3">{{ $department->name }}</td>
+                    <tr id="{{ $department->id }}-row">
+                        <td>{{ $department->name }}</td>
+                        <td><span class="den-primary-badge">{{ $department->users_count }}</span></td>
+                        <td>
+                            <button class="den-close-button" onclick="removeDepartment('{{ $department->id }}')">X</button>
+                            <button class="den-edit-button" onclick="editDepartment('{{ $department }}')">EDIT</button>
+                        </td>
                     </tr>
-                    @forelse($department->children as $subDepartment)
-                        <tr id="{{ $subDepartment->id }}-row" >
-                            <td>{{ $subDepartment->name }}</td>
-                            <td>{{ $subDepartment->users_count }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3">No Sub Departments Found</td>
-                        </tr>
-                    @endforelse
                 @empty
                     <tr>
                         <td colspan="3">No Departments Found</td>
@@ -57,36 +52,12 @@
         <h2 class="den-modal-title">Department</h2>
 
         <form id="den-department-form" action="{{ route('departments.store') }}" method="post">
-            <input type="hidden" id="department_id">
-            <div class="den-form-group">
-                <label for="department_type">Select Type</label>
-                <select name="department_type" class="den-select" id="department_type">
-                    <option value="">Select Department Type</option>
-                    <option value="DEPARTMENT">Department</option>
-                    <option value="SUBDEPARTMENT">Sub Department</option>
-                </select>
-                <!-- <div class="den-error">Error messages here</div> -->
-            </div>
-
-            <div class="den-form-group" id="department_input_name_div" style="visibility: hidden;">
+            <input type="hidden" id="department_id" name="department_id">
+            <div class="den-form-group" id="department_input_name_div" >
                 <label for="name">Name</label>
                 <input id="name" class="den-input" type="name" name="name" value="" required autofocus>
                 <!-- <div class="den-error">Error messages here</div> -->
             </div>
-
-            <div class="den-form-group" id="department_input_parent_div" style="visibility: hidden;">
-                <label for="parent_department">Select a Parent Department</label>
-                <select name="parent_id" class="den-select" id="parent_departments">
-                    <option value="">Select Parent Department</option>
-                    @forelse($parentDepartments as $department)
-                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                    @empty
-                        <option value="">No Departments Found</option>
-                    @endforelse
-                </select>
-                <!-- <div class="den-error">Error messages here</div> -->
-            </div>
-
             <div class="den-button-group">
                 <button class="den-btn" id="den-department-form-btn">Create</button>
             </div>
@@ -108,20 +79,38 @@
         toggleModal();
     }
 
-    // Event listener for department type select
-    document.querySelector('#department_type').addEventListener('change', (e) => {
-        const departmentType = e.target.value;
-        if(departmentType === 'DEPARTMENT') {
-            document.getElementById('department_input_name_div').style.visibility = 'visible';
-            document.getElementById('department_input_parent_div').style.visibility = 'hidden';
-        } else if(departmentType === 'SUBDEPARTMENT') {
-            document.getElementById('department_input_name_div').style.visibility = 'visible';
-            document.getElementById('department_input_parent_div').style.visibility = 'visible';
-        } else {
-            document.getElementById('department_input_name_div').style.visibility = 'hidden';
-            document.getElementById('department_input_parent_div').style.visibility = 'hidden';
-        }
-    });
+    function removeDepartment(id) {
+        confirmBefore('Are you sure you want to delete this Department?').then(() => {
+            fetch('/departments/' + id, {
+                method: 'DELETE',
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                // check status code
+                if (!data.success) {
+                    return toast(data.message, 'error');
+                }
+                // show message
+                toast(data.message);
+
+                // remove the role from the table
+                document.getElementById(`${id}-row`).remove();
+            }).catch(error => {
+                toast(error.message, 'error');
+            });
+        }).catch(() => {
+            console.log('User cancelled the operation');
+        });
+    }
+
+    function editDepartment(department) {
+        department = JSON.parse(department);
+        console.log('department', department);
+        resetForm('#den-department-form');
+        toggleModal();
+        document.querySelector('#department_id').value = department.id;
+        document.querySelector('#name').value = department.name;
+    }
 </script>
 @endpush
 

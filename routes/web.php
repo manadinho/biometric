@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'departments', 'as' => 'departments.'], function(){
         Route::get('/', [DepartmentController::class, 'index'])->name('index');
         Route::post('/store', [DepartmentController::class, 'store'])->name('store');
-        // Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+        Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
     });
 
     // USERS ROUTES
@@ -56,6 +56,10 @@ Route::middleware('auth')->group(function () {
         // Route::post('/store', [UserController::class, 'store'])->name('store');
         // Route::delete('/{role}', [UserController::class, 'destroy'])->name('destroy');
     });
+});
+
+Route::get('/device-info', function () {
+    return response()->json(['status' => 'success', 'message' => 'API is reachable']);
 });
 
 require __DIR__.'/auth.php';

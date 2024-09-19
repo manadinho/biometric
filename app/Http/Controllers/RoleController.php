@@ -48,10 +48,10 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         if ($role->users()->exists()) {
-            return response()->json(['message' => 'Role cannot be deleted because it is assigned to some users'], 400);
+            return response()->json(['success' => false, 'message' => 'Role cannot be deleted because it is assigned to some users']);
         }
         
         $role->delete();
-        return response()->json(['message' => 'Role deleted successfully']);
+        return response()->json(['success' => true, 'message' => 'Role deleted successfully']);
     }
 }

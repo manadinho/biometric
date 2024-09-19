@@ -108,6 +108,10 @@
             }).then(response => {
                 return response.json();
             }).then(data => {
+                if (!data.success) {
+                    return toast(data.message, 'error');
+                }
+                
                 // show message
                 toast(data.message);
 
