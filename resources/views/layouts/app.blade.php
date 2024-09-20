@@ -181,7 +181,7 @@
               <h3>User Managent</h3>
             </li>
             <li>
-              <a href="javascript:void(0)" onclick="requestHtml('timetables')" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('timetables.index') }}" data-permission="TIMETABLE_MANAGEMENT">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>

@@ -4,6 +4,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -63,7 +64,13 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'employee-transfers', 'as' => 'employee-transfers.'], function(){
         Route::get('/', [EmployeeTransferController::class, 'index'])->name('index');
         Route::post('/', [EmployeeTransferController::class, 'action'])->name('action');
-        // Route::delete('/{employeeTransfer}', [EmployeeTransferController::class, 'destroy'])->name('destroy');
+    });
+
+    // TIMETABLE ROUTES
+    Route::group(['prefix' => 'timetables', 'as' => 'timetables.'], function(){
+        Route::get('/', [TimetableController::class, 'index'])->name('index');
+        Route::post('/store', [TimetableController::class, 'store'])->name('store');
+        Route::delete('/{timetable}', [TimetableController::class, 'destroy'])->name('destroy');
     });
 });
 
