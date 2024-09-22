@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('timetables');
+            $table->text('timetables')->nullable();
             $table->timestamps();
         });
     }

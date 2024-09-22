@@ -187,7 +187,7 @@
                 </svg>
                 <span>Timetables</span>
               </a>
-              <a href="javascript:void(0)" onclick="requestHtml('shifts')" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('shifts.index') }}" data-permission="TIMETABLE_MANAGEMENT">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>

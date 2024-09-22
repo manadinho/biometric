@@ -4,6 +4,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +72,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [TimetableController::class, 'index'])->name('index');
         Route::post('/store', [TimetableController::class, 'store'])->name('store');
         Route::delete('/{timetable}', [TimetableController::class, 'destroy'])->name('destroy');
+    });
+
+    // SHIFT ROUTES
+    Route::group(['prefix' => 'shifts', 'as' => 'shifts.'], function(){
+        Route::get('/', [ShiftController::class, 'index'])->name('index');
+        Route::post('/store', [ShiftController::class, 'store'])->name('store');
+        Route::delete('/{shift}', [ShiftController::class, 'destroy'])->name('destroy');
+        Route::post('/add-timetable', [ShiftController::class, 'addTimetable'])->name('timetables');
     });
 });
 
