@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\EmployeeTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -80,6 +81,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [ShiftController::class, 'store'])->name('store');
         Route::delete('/{shift}', [ShiftController::class, 'destroy'])->name('destroy');
         Route::post('/add-timetable', [ShiftController::class, 'addTimetable'])->name('timetables');
+    });
+
+    // EMPLOYEE SCHDULE ROUTES
+    Route::group(['prefix' => 'employee-schedules', 'as' => 'employee-schedules.'], function(){
+        Route::get('/', [EmployeeScheduleController::class, 'index'])->name('index');
+        Route::post('/store', [EmployeeScheduleController::class, 'store'])->name('store');
+        // Route::delete('/{employeeSchedule}', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
     });
 });
 

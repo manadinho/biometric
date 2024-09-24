@@ -235,5 +235,11 @@
         });
     }
 </script>
+
+    @if(session('success'))
+        <script>
+            toast("{{ session('success') }}");
+        </script>
+    @endif
 @endpush
 </x-app-layout>

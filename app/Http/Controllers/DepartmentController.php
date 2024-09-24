@@ -47,6 +47,12 @@ class DepartmentController extends Controller
 
         $users = Department::find($id)->users;
 
+        // if this api call comes from employee shift schedule
+        if(request()->has('withShifts')) {
+            // load shifts relationship
+            $users->load('shifts');
+        }
+
         // if users are not found
         if ($users->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'No user found']);

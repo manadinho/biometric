@@ -193,7 +193,7 @@
                 </svg>
                 <span>Shifts Managent</span>
               </a>
-              <a href="javascript:void(0)" onclick="requestHtml('employee_schedule')" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('employee-schedules.index') }}" data-permission="TIMETABLE_MANAGEMENT">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>
@@ -372,6 +372,16 @@
           })
 
             
+      }
+
+      function formatDate(given_date) {
+          const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+          const date = new Date(given_date);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = months[date.getMonth()];
+          const year = date.getFullYear();
+
+          return `${day} - ${month} - ${year}`;
       }
 
     </script>

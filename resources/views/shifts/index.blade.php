@@ -34,10 +34,17 @@
                         if (is_string($shift->timetables)) {
                             $shift->timetables = json_decode($shift->timetables, true);
                         }
+
+                        $isTimetableSet = false;
+                        foreach($shift->timetables as $day => $timetable) {
+                            if ($timetable) {
+                                $isTimetableSet = true;
+                            }
+                        }
                     @endphp
                     <tr id="{{ $shift->id }}-row">
                         <td>
-                            @if($shift->timetables)
+                            @if($isTimetableSet)
                                 <div style="display:flex; align-items: center"><div class="circle-tick"></div> &nbsp; {{ $shift->name }}</div>
                             @else
                                 {{ $shift->name }}
@@ -338,9 +345,9 @@
     </script>
 
     @if(session('success'))
-    <script>
-        toast("{{ session('success') }}");
-    </script>
-@endif
+        <script>
+            toast("{{ session('success') }}");
+        </script>
+    @endif
 @endpush
 </x-app-layout>
