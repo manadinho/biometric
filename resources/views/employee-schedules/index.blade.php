@@ -185,8 +185,7 @@
                         <br>
                         <span style="display:flex">
                             <span class="den-primary-badge user-shift-badge-btn" onclick='showShiftDetails(${JSON.stringify(shift)})'>view</span>
-                            <span class="den-primary-badge user-shift-badge-btn">edit</span>
-                            <span class="den-primary-badge user-shift-badge-btn" onclick="deleteUserShift(${shift.id}, this)">delete</span>
+                            <span class="den-primary-badge user-shift-badge-btn" onclick='deleteUserShift(${JSON.stringify(shift)}, this)'>delete</span>
                         </span>
                     </span>
                     <br>`;
@@ -369,6 +368,34 @@
             </table> 
         </div>
         `;
+    }
+
+    function deleteUserShift(shift, element) {
+        confirmBefore('Are you sure you want to delete this shift?').then(() => {
+            fetch('{{ route("employee-schedules.destroy") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: shift.pivot.user_id,
+                shift_id: shift.pivot.shift_id
+            })
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                if(!data.success) {
+                    return toast(data.message, 'error');
+                }
+
+                toast(data.message);
+                element.closest('.user-shift-badge').remove();
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        }).catch(() => {
+            console.log('User cancelled the operation');
+        });
     }
 </script>
 

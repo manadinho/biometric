@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'employee-schedules', 'as' => 'employee-schedules.'], function(){
         Route::get('/', [EmployeeScheduleController::class, 'index'])->name('index');
         Route::post('/store', [EmployeeScheduleController::class, 'store'])->name('store');
-        // Route::delete('/{employeeSchedule}', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
+        Route::post('/destroy', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
     });
 });
 

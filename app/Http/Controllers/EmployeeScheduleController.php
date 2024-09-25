@@ -60,4 +60,20 @@ class EmployeeScheduleController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Shift assigned to user successfully']);
     }
+
+    public function destroy() 
+    {
+        $data = request()->validate([
+            'user_id' => 'required|exists:users,id',
+            'shift_id' => 'required|exists:shifts,id'
+        ]); 
+
+        if(!$data) {
+            return response()->json(['success' => false, 'message' => 'Invalid data']);
+        }
+
+        DB::table('shift_user')->where(['user_id' => $data['user_id'], 'shift_id' => $data['shift_id']])->delete();
+
+        return response()->json(['success' => true, 'message' => 'Shift removed from user successfully']);
+    }
 }
