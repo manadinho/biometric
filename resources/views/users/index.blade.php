@@ -1,3 +1,12 @@
+<style>
+    .fingerprint-required{
+        background-color: #f8d7da !important;
+    }
+
+    .fingerprint-icon:hover{
+        cursor: pointer;
+    }
+</style>
 <x-app-layout>
 <div class="container">
     <div class="den-page-header">
@@ -27,6 +36,7 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Enrolled</th>
                     <th>Role</th>
                     <th>Department</th>
                     <th>Action</th>
@@ -34,10 +44,13 @@
             </thead>
             <tbody id="den-users-table-body">
                 @forelse($users as $user)
-                    <tr id="{{ $user->id }}-row">
+                    <tr id="{{ $user->id }}-row" class="{{!$user->is_finger_print_added ? 'fingerprint-required' : ''}}">
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>
+                            <img class="fingerprint-icon" onclick="registerFingerprint('{{ $user->id }}')" src="{{ asset('icons/fingerprint.svg') }}" alt="fingerprint" width="30px">
+                        </td>
                         <td>
                             @forelse($user->roles as $role)
                                 {{ $role->name }}
@@ -177,6 +190,15 @@
 
         document.querySelector('#department').value = user.department.id;
     }
+
+    function registerFingerprint(userId) {
+        if(!window.DENONTEK_WEBSOCKET_STATUS) {
+            return toast('Machine is not connected at the momment', 'error');
+        }
+
+        window.DENONTEK_SOCKET.send(`R${userId}`);
+    }
+
 </script>
 
 @endpush

@@ -244,7 +244,7 @@ body {
 .search-and-user form button {
   position: absolute;
   top: 50%;
-  right: 15px;
+  right: 2px;
   transform: translateY(-50%);
 }
 
@@ -650,6 +650,16 @@ tr:hover {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.den-input-error{
+  border: 1px solid #f9d7da !important;
+  box-shadow: 3px 3px 14px -2px #f9d7da !important;
+}
+
+.den-input-success{
+  border: 1px solid #5df68b !important;
+  box-shadow: 3px 3px 14px -2px #5df68b !important;
 }
 
 .den-select {

@@ -61,4 +61,19 @@ class UserController extends Controller
         $user->delete();
         return response()->json(['success' => true, 'message' => 'User deleted successfully']);
     }
+
+    function fingerprintRegistered() 
+    {
+        $userId = request('user_id');
+
+        if (!$userId) {
+            return response()->json(['success' => false, 'message' => 'User ID is required']);
+        }
+
+        $user = User::find($userId);
+        $user->is_finger_print_added = true;
+        $user->save();
+
+        return response()->json(['success' => true, 'message' => 'Fingerprint registered successfully']);
+    }
 }

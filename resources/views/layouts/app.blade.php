@@ -116,38 +116,6 @@
                 <span>Dashboard</span>
               </a>
             </li>
-            <li>
-              <a href="#0">
-                <svg>
-                  <use xlink:href="#trends"></use>
-                </svg>
-                <span>Trends</span>
-              </a>
-            </li>
-            <li>
-              <a href="#0">
-                <svg>
-                  <use xlink:href="#collection"></use>
-                </svg>
-                <span>Collection</span>
-              </a>
-            </li>
-            <li>
-              <a href="#0">
-                <svg>
-                  <use xlink:href="#comments"></use>
-                </svg>
-                <span>Comments</span>
-              </a>
-            </li>
-            <li>
-              <a href="#0">
-                <svg>
-                  <use xlink:href="#appearance"></use>
-                </svg>
-                <span>Appearance</span>
-              </a>
-            </li>
             <li class="menu-heading">
               <h3>User Managent</h3>
             </li>
@@ -236,13 +204,14 @@
               </a>
             </li>
             <li>
-              <div class="switch">
+              <!-- todo:: will be implemented later -->
+              <!-- <div class="switch">
                 <input type="checkbox" id="mode" checked style="display: none;">
                 <label for="mode">
                   <span></span>
                   <span>Dark</span>
                 </label>
-              </div>
+              </div> -->
               <button class="collapse-btn" aria-expanded="true" aria-label="collapse menu">
                 <svg aria-hidden="true">
                   <use xlink:href="#collapse"></use>
@@ -254,13 +223,11 @@
         </nav>
       </header>
       <section class="page-content">
-          <!-- <section class="search-and-user">
-            <form>
-              <input type="search" placeholder="Search Pages...">
-              <button type="submit" aria-label="submit form">
-                <svg aria-hidden="true">
-                  <use xlink:href="#search"></use>
-                </svg>
+          <section class="search-and-user">
+            <form onsubmit="return false;">
+              <input type="text" class="den-input" id="machine-ip-field" placeholder="MACHINE IP">
+              <button onclick="storeMachineIp()" aria-label="submit form">
+                <img src="{{ asset('icons/check.svg') }}" alt="check" width="30">
               </button>
             </form>
             <div class="admin-profile">
@@ -272,7 +239,7 @@
                 </svg>
               </div>
             </div>
-          </section> -->
+          </section>
           <section id="content" class="grid">
           {{ $slot }}
           </section>
@@ -287,8 +254,108 @@
     <div id="toast" class="toast">✅ This is a toast message!</div>
     
     <script>
+      window.DENONTEK_WEBSOCKET_STATUS = false;
       window.DENONTEK_URL = 'http://localhost:3000'
-      window.DENONTEK_SOCKET = new WebSocket('ws://localhost:1000');
+      window.DENONTEK_SOCKET = null;
+      window.CURRENT_ROUTE_NAME = '{{ Route::currentRouteName() }}';
+
+      document.addEventListener('DOMContentLoaded', function() {
+         // getting the machine ip from the local storage
+          const machineIp = localStorage.getItem('machineIp');
+          if(machineIp){
+            document.getElementById('machine-ip-field').value = machineIp;
+
+            connectWebsocket(machineIp);
+          } else {
+            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'error');
+          }
+
+      })
+
+      function addSuccessOrErrorOnInputField(inputField, type = 'success') {
+          if(type === 'success'){
+            inputField.classList.remove('den-input-error');
+            inputField.classList.add('den-input-success');
+          } else if(type === 'error'){
+            inputField.classList.remove('den-input-success');
+            inputField.classList.add('den-input-error');
+          }
+      }
+
+      function storeMachineIp() {
+          const machineIp = document.getElementById('machine-ip-field').value;
+          if(machineIp){
+            localStorage.setItem('machineIp', machineIp);
+            
+            connectWebsocket(machineIp);
+          }
+      }
+
+      function connectWebsocket(machineIp) {
+
+        window.DENONTEK_SOCKET = new WebSocket(`ws://${machineIp}/ws`);
+            // Event listener for connection open
+        window.DENONTEK_SOCKET.onopen = () => {
+            console.log('Connected to WebSocket server');
+            window.DENONTEK_WEBSOCKET_STATUS = true;
+            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'success');
+
+            // add ping pong message to the server with 25 seconds interval
+            setInterval(() => {
+                window.DENONTEK_SOCKET.send('0');
+            }, 25000);
+        };
+
+        // Event listener for receiving messages
+        window.DENONTEK_SOCKET.onmessage = (event) => {
+            console.log('Received message:', event.data);
+            if(event.data === 'pong'){ // pong message ignore this
+                return;
+            }
+
+            const [type, data] = event.data.split(',');
+            if(type === 'registration') {
+              if(window.CURRENT_ROUTE_NAME === 'users.index') {
+                document.getElementById(`${data}-row`).classList.remove('fingerprint-required');
+              }
+
+              markFingerprintRegistered(data);
+            }
+        };
+
+        // Event listener for errors
+        window.DENONTEK_SOCKET.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'error');
+        };
+
+        // Event listener for connection close
+        window.DENONTEK_SOCKET.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            document.getElementById('output').innerText += 'Disconnected from WebSocket server\n';
+        };
+      }
+
+      function markFingerprintRegistered(data) {
+        fetch('/users/fingerprint-registered', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: data})
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            // check status code
+            if (!data.success) {
+                return toast(data.message, 'error');
+            }
+            // show message
+            toast(data.message);
+        }).catch(error => {
+            toast(error.message, 'error');
+        });
+      }
 
       function toast(message = 'This is a toast message!', type = 'success', duration = 5000) {
           const toast = document.getElementById("toast");

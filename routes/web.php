@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        Route::post('/fingerprint-registered', [UserController::class, 'fingerprintRegistered'])->name('fingerprint-registered');
     });
 
     // EMPLOYEE TRANSFER ROUTES
