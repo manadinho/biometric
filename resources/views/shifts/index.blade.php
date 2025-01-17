@@ -272,71 +272,71 @@
         }
 
         function generateViewTimetableContent(shift) {
-        let table_body = ``;
-        for(const day in shift.timetables){ 
-            const timetable_id = shift.timetables[day];
-            const timetable = TIMETABLES.find(timetable => timetable.id == timetable_id);
-            const start = timetable ? + timetable.on_time.split(':')[0] : null;
-            const end = timetable ? + timetable.off_time.split(':')[0] : null;
+            let table_body = ``;
+            for(const day in shift.timetables){ 
+                const timetable_id = shift.timetables[day];
+                const timetable = TIMETABLES.find(timetable => timetable.id == timetable_id);
+                const start = timetable ? + timetable.on_time.split(':')[0] : null;
+                const end = timetable ? + timetable.off_time.split(':')[0] : null;
 
-            table_body += `<tr>`;
-            table_body += `<td> ${day}</td>`;
-            for(let i = 0; i < 24; i++) {
-                if(!start) {
-                    table_body += `<td class="timetable-red"></td>`;
-                    continue;
+                table_body += `<tr>`;
+                table_body += `<td> ${day}</td>`;
+                for(let i = 0; i < 24; i++) {
+                    if(!start) {
+                        table_body += `<td class="timetable-red"></td>`;
+                        continue;
+                    }
+                    if(i >= start && i <= end) {
+                        table_body += `<td class="timetable-highlight"></td>`;
+                        continue;
+                    }
+                    table_body += `<td></td>`;
                 }
-                if(i >= start && i <= end) {
-                    table_body += `<td class="timetable-highlight"></td>`;
-                    continue;
-                }
-                table_body += `<td></td>`;
+                table_body += `</tr>`;
             }
-            table_body += `</tr>`;
-        }
 
-        return `
-        <div>
-            <h2 class="den-modal-title">View Timetable</h2>
-            <table width="100" >
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>0</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                        <th>4</th>
-                        <th>5</th>
-                        <th>6</th>
-                        <th>7</th>
-                        <th>8</th>
-                        <th>9</th>
-                        <th>10</th>
-                        <th>11</th>
-                        <th>12</th>
-                        <th>13</th>
-                        <th>14</th>
-                        <th>15</th>
-                        <th>16</th>
-                        <th>17</th>
-                        <th>18</th>
-                        <th>19</th>
-                        <th>20</th>
-                        <th>21</th>
-                        <th>22</th>
-                        <th>23</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    ${table_body}
-                </tbody>
-            </table> 
-        </div>
-        
-        <button class="den-close-button" onclick="closeViewtableModal()">X</button>
-        `;
-    }
+            return `
+            <div>
+                <h2 class="den-modal-title">View Timetable</h2>
+                <table width="100" >
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>0</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>19</th>
+                            <th>20</th>
+                            <th>21</th>
+                            <th>22</th>
+                            <th>23</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        ${table_body}
+                    </tbody>
+                </table> 
+            </div>
+            
+            <button class="den-close-button" onclick="closeViewtableModal()">X</button>
+            `;
+        }
 
     function closeViewtableModal() {
         toggleModal('.view-timetable-modal');

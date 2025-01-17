@@ -58,6 +58,10 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'You cannot delete yourself']);
         }
 
+        if ($user->id === 1) {
+            return response()->json(['success' => false, 'message' => 'You cannot delete Super Admin']);
+        }
+
         $user->delete();
         return response()->json(['success' => true, 'message' => 'User deleted successfully']);
     }

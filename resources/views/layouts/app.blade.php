@@ -6,7 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Den Biometric</title>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+<style>
+  #connect-status{
+    display: flex;
+    align-items: center;
+    border-radius: 15px 0px 0px 15px; 
+    padding:5px;
+  }
+
+  #sync-attendance {
+    font-size: 25px; 
+    margin-right:20px; 
+    cursor:pointer
+  }
+</style>
 <body>
     <svg style="display:none;">
         <symbol id="logo" viewBox="0 0 140 59">
@@ -172,7 +187,7 @@
               <h3>Settings</h3>
             </li>
             <li>
-              <a href="#0">
+              <a href="{{ route('settings.index') }}">
                 <svg>
                   <use xlink:href="#settings"></use>
                 </svg>
@@ -224,13 +239,21 @@
       </header>
       <section class="page-content">
           <section class="search-and-user">
-            <form onsubmit="return false;">
+            <div></div>
+            <div style="display: flex; align-items:center;">
+              <i class="fa fa-refresh" id="sync-attendance" onclick="syncAttendance()"></i>
+              <div id="connect-status">
+            </div>
+            
+                
+            </div>
+            <!-- <form onsubmit="return false;">
               <input type="text" class="den-input" id="machine-ip-field" placeholder="MACHINE IP">
               <button onclick="storeMachineIp()" aria-label="submit form">
-                <img src="{{ asset('icons/check.svg') }}" alt="check" width="30">
+              &#128279;
               </button>
-            </form>
-            <div class="admin-profile">
+            </form> -->
+            <!-- <div class="admin-profile">
               <span class="greeting">Hello admin</span>
               <div class="notifications">
                 <span class="badge">1</span>
@@ -238,7 +261,7 @@
                   <use xlink:href="#users"></use>
                 </svg>
               </div>
-            </div>
+            </div> -->
           </section>
           <section id="content" class="grid">
           {{ $slot }}
@@ -258,47 +281,53 @@
       window.DENONTEK_URL = 'http://localhost:3000'
       window.DENONTEK_SOCKET = null;
       window.CURRENT_ROUTE_NAME = '{{ Route::currentRouteName() }}';
+      window.ATTENDANCE = [];
 
       document.addEventListener('DOMContentLoaded', function() {
          // getting the machine ip from the local storage
-          const machineIp = localStorage.getItem('machineIp');
-          if(machineIp){
-            document.getElementById('machine-ip-field').value = machineIp;
-
-            connectWebsocket(machineIp);
-          } else {
-            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'error');
-          }
-
+         connectWebsocket();
       })
 
       function addSuccessOrErrorOnInputField(inputField, type = 'success') {
           if(type === 'success'){
-            inputField.classList.remove('den-input-error');
-            inputField.classList.add('den-input-success');
+            let html = `
+                <i class="fa fa-check"></i>
+                <h6> &nbsp CONNECTED</h6>
+            `
+            inputField.innerHTML = html;
+            inputField.style.color = '#4caf4f';
+            inputField.style.backgroundColor = '#c8e6c9';
           } else if(type === 'error'){
-            inputField.classList.remove('den-input-success');
-            inputField.classList.add('den-input-error');
+            let html = `
+                <i class="fa fa-close"></i>
+                <h6> &nbsp NOT CONNECTED</h6>
+            `
+            inputField.innerHTML = html;
+            inputField.style.color = '#BE1104';
+            inputField.style.backgroundColor = '#F78F8F';
+          } else if(type === 'loading'){
+            let html = `
+                <i class="fa fa-spinner fa-spin"></i>
+                <h6> &nbsp CONNECTING</h6>
+            `
+            inputField.innerHTML = html;
+            inputField.style.color = '#000';
+            inputField.style.backgroundColor = '#d2d0d0';
           }
       }
 
-      function storeMachineIp() {
-          const machineIp = document.getElementById('machine-ip-field').value;
-          if(machineIp){
-            localStorage.setItem('machineIp', machineIp);
-            
-            connectWebsocket(machineIp);
-          }
-      }
+      function connectWebsocket() {
+        const connectStatusElement = document.getElementById('connect-status');
+        addSuccessOrErrorOnInputField(connectStatusElement, 'loading');
 
-      function connectWebsocket(machineIp) {
-
-        window.DENONTEK_SOCKET = new WebSocket(`ws://${machineIp}/ws`);
+        window.DENONTEK_SOCKET = new WebSocket(`ws://denbiometric.local/ws`);
             // Event listener for connection open
         window.DENONTEK_SOCKET.onopen = () => {
-            console.log('Connected to WebSocket server');
             window.DENONTEK_WEBSOCKET_STATUS = true;
-            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'success');
+            addSuccessOrErrorOnInputField(connectStatusElement);
+
+            //dispatch event
+            document.dispatchEvent(new CustomEvent('websocketConnected', {detail: { success: true }}));
 
             // add ping pong message to the server with 25 seconds interval
             setInterval(() => {
@@ -313,20 +342,63 @@
                 return;
             }
 
-            const [type, data] = event.data.split(',');
-            if(type === 'registration') {
+            const [type, data] = event.data.split('|');
+            if(type === 'REGISTRATION-COMPLETED') {
               if(window.CURRENT_ROUTE_NAME === 'users.index') {
                 document.getElementById(`${data}-row`).classList.remove('fingerprint-required');
               }
 
               markFingerprintRegistered(data);
             }
+
+            // GET ALL ATTENDANCE
+            if(type === 'ALL-ATTENDANCE') {
+              // to make sure only the sync requested person listens to the response
+              const element = document.getElementById('sync-attendance');
+              if(!element.classList.contains('fa-spin')) {;
+                  return;
+              }
+
+              // check if valid json string or not
+              try {
+                  const attendance = JSON.parse(data);
+                  console.log(attendance);
+
+                  // get highest id from the attendance
+                  const highestId = Math.max.apply(Math, attendance.map(function(o) { return o.id; }));
+
+                  if(attendance.length > 0) {
+                      window.ATTENDANCE = [...window.ATTENDANCE, ...attendance];
+                      window.DENONTEK_SOCKET.send('A' + highestId);
+                  }else {
+                      if(window.ATTENDANCE.length > 0) {
+                          saveAttendance();
+                      }
+                  }
+              } catch (e) {
+                  if(window.DENONTEK_SOCKET.readyState === WebSocket.OPEN) {
+                      saveAttendance();
+                  }
+                  return;
+              }
+            }
+
+            // GET ALL EMPLOYEES
+            if(type === 'ALL-EMPLOYEES') {
+              if(window.CURRENT_ROUTE_NAME === 'users.index') {
+                const machineEmployees = JSON.parse(data);
+                compareEmployees(machineEmployees);
+              }
+            }
         };
 
         // Event listener for errors
         window.DENONTEK_SOCKET.onerror = (error) => {
             console.error('WebSocket error:', error);
-            addSuccessOrErrorOnInputField(document.getElementById('machine-ip-field'), 'error');
+            addSuccessOrErrorOnInputField(document.getElementById('connect-status'), 'error');
+
+            //dispatch event
+            document.dispatchEvent(new CustomEvent('websocketConnected', {detail: { success: false }}));
         };
 
         // Event listener for connection close
@@ -334,6 +406,46 @@
             console.log('Disconnected from WebSocket server');
             document.getElementById('output').innerText += 'Disconnected from WebSocket server\n';
         };
+      }
+
+      function saveAttendance() {
+          if(window.ATTENDANCE.length > 0) {
+            fetch("{{ route('attendances.mark-attendance-bulk') }}", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': '{{ csrf_token() }}'
+              },
+              body: JSON.stringify({
+                attendance: window.ATTENDANCE
+              })
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                window.ATTENDANCE = [];
+
+                // Remove the spinner
+                const element = document.getElementById('sync-attendance');
+                element.classList.remove('fa-spin');
+
+                toast('Attendance has been synced successfully!');
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+          } else{
+              // remove the spinner
+              const element = document.getElementById('sync-attendance');
+              element.classList.remove('fa-spin');
+
+              toast('No new attendance to sync!', 'info');
+          }
       }
 
       function markFingerprintRegistered(data) {
@@ -450,6 +562,33 @@
 
           return `${day} - ${month} - ${year}`;
       }
+
+      function syncAttendance() {
+        
+          if(window.DENONTEK_WEBSOCKET_STATUS) {
+            document.getElementById('sync-attendance').classList.add('fa-spin');
+            const url = "{{ route('attendances.get-last-att-id') }}";
+            fetch(url, { method: 'GET' })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`Error: ${response.statusText}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                const lastId = data.id;
+                console.log('======',lastId);
+                window.DENONTEK_SOCKET.send('A' + lastId);
+              })
+              .catch(error => {
+                document.getElementById('sync-attendance').classList.remove('fa-spin');
+                toast(error.message, 'error');
+              });
+            
+          } else {
+              toast('Please connect to the machine first', 'warning');
+            }
+        }
 
     </script>
 </body>

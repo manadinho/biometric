@@ -44,12 +44,18 @@
             </thead>
             <tbody id="den-users-table-body">
                 @forelse($users as $user)
-                    <tr id="{{ $user->id }}-row" class="{{!$user->is_finger_print_added ? 'fingerprint-required' : ''}}">
+
+                    <!-- to prevent super admin -->
+                    @if($user->id == 1)
+                        @continue
+                    @endif
+                    
+                    <tr id="{{ $user->id }}-row">
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>
-                            <img class="fingerprint-icon" onclick="registerFingerprint('{{ $user->id }}')" src="{{ asset('icons/fingerprint.svg') }}" alt="fingerprint" width="30px">
+                            <img class="fingerprint-icon" onclick="registerFingerprint('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" src="{{ asset('icons/fingerprint.svg') }}" alt="fingerprint" width="30px">
                         </td>
                         <td>
                             @forelse($user->roles as $role)
@@ -135,6 +141,8 @@
 @push('scripts')
 
 <script>
+    const EMPLOYEES = @json($users);
+
     function createUserForm() {
         resetForm('#den-user-form');
         toggleModal();
@@ -191,12 +199,35 @@
         document.querySelector('#department').value = user.department.id;
     }
 
-    function registerFingerprint(userId) {
+    document.addEventListener('websocketConnected', function(event) {
+        if(event.detail.success) {
+            getEmployeesFromMachine();
+        }
+    });
+
+    function getEmployeesFromMachine() {
+        window.DENONTEK_SOCKET.send('E');
+    }
+
+    function registerFingerprint(userId, name, email) {
         if(!window.DENONTEK_WEBSOCKET_STATUS) {
             return toast('Machine is not connected at the momment', 'error');
         }
 
-        window.DENONTEK_SOCKET.send(`R${userId}`);
+        window.DENONTEK_SOCKET.send(`R${userId}|${name}|${email}`);
+    }
+
+    function compareEmployees(machineEmployees = []) {
+        const machineEmployeeIds = machineEmployees.map(employee => employee.id);
+        
+        EMPLOYEES.forEach(employee => {
+            if(!machineEmployeeIds.includes(employee.id)) {
+                const element = document.getElementById(`${employee.id}-row`);
+                if(element) {
+                    element.classList.add('fingerprint-required');
+                }
+            }
+        });
     }
 
 </script>

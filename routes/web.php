@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\EmployeeTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
@@ -89,6 +91,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [EmployeeScheduleController::class, 'index'])->name('index');
         Route::post('/store', [EmployeeScheduleController::class, 'store'])->name('store');
         Route::post('/destroy', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
+    });
+    
+    // ATTENDANCE ROUTES
+    Route::group(['prefix' => 'attendances', 'as' => 'attendances.'], function(){
+        // Route::get('/', [AttendanceController::class, 'index'])->name('index');
+        // Route::post('/store', [AttendanceController::class, 'store'])->name('store');
+        // Route::post('/get-attendance', [AttendanceController::class, 'getAttendance'])->name('get-attendance');
+        Route::get('/get-last-att-id', [AttendanceController::class, 'getLastAttId'])->name('get-last-att-id');
+        Route::post('/mark-attendance-bulk', [AttendanceController::class, 'markAttendanceBulk'])->name('mark-attendance-bulk');
+    });
+
+    // SETTINGS ROUTES
+    Route::group(['prefix' => 'settings', 'as' => 'settings.'], function(){
+        Route::get('/', [SettingController::class, 'index'])->name('index');
     });
 });
 

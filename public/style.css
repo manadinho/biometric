@@ -591,6 +591,13 @@ tr:hover {
     border-radius: 4px;
 }
 
+.den-btn-danger{
+    background-color: #dc2626;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+}
+
 .den-page-header{
     display: flex;
     justify-content: space-between;
