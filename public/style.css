@@ -2,13 +2,39 @@
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700&display=swap");
 
+
 :root {
-  --page-header-bgColor: #242e42;
-  --page-header-bgColor-hover: #1d2636;
-  --page-header-txtColor: #dde9f8;
+  --page-header-bgColor: #191C24;
+  --page-header-bgColor-hover: #335a9e;
+  --page-header-txtColor: #6B6B6B;
+  /* --page-headerIcon-color: #5E72E4; */
+  --page-headerIcon-color: #be1109;
+
   --page-header-headingColor: #7889a4;
   --page-header-width: 220px;
-  --page-content-bgColor: #f0f1f6;
+  --page-content-bgColor:  #000000;
+  --page-content-txtColor: #6C7293;
+  --page-content-blockColor: #fff;
+  --white: #fff;
+  --black: var(--page-header-bgColor);
+  --blue: #be1104;
+  --red: #ec1848;
+  --border-radius: 4px;
+  --box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.075);
+  --switch-bgLightModeColor: #87cefa;
+  --switch-sunColor: gold;
+  --switch-moonColor: #f4f4f4;
+  --switch-bgDarkModeColor: #1f1f27;
+  --page-labelColor: #ffffff;
+}
+/* :root {
+  --page-header-bgColor: #FFFFFF;
+  --page-header-bgColor-hover: #335a9e;
+  --page-header-txtColor: #6B6B6B;
+  --page-headerIcon-color: #5E72E4;
+  --page-header-headingColor: #7889a4;
+  --page-header-width: 220px;
+  --page-content-bgColor: #5E72E4;
   --page-content-txtColor: #171616;
   --page-content-blockColor: #fff;
   --white: #fff;
@@ -21,7 +47,8 @@
   --switch-sunColor: gold;
   --switch-moonColor: #f4f4f4;
   --switch-bgDarkModeColor: #1f1f27;
-}
+  --page-labelColor: #031b4e;
+} */
 
 * {
   padding: 0;
@@ -53,7 +80,7 @@ label {
 
 button,
 input {
-  border: none;
+  border: 2px solid var(--blue);
   box-shadow: 3px 3px 14px -2px gray;
 }
 
@@ -63,6 +90,9 @@ svg {
 
 body {
   font: 16px/1.5 "Lato", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
+  font-size: 14px;
+  font-weight: 550;
 }
 
 /* HEADER STYLES
@@ -78,6 +108,8 @@ body {
   width: var(--page-header-width);
   color: var(--page-header-txtColor);
   background: var(--page-header-bgColor);
+  /* scrollbar-color: #6f42c1 transparent; */
+  scrollbar-width: none;
 }
 
 /*In case you prefer an absolutely positioned header that covers the full page height, add these styles*/
@@ -111,6 +143,10 @@ body {
 .page-header .logo {
   display: block;
   margin: 0 15px;
+  font-weight: 700;
+  font-size: 17px;
+  font-family: 'Poppins', sans-serif !important;
+  color: #eb1616;
 }
 
 .page-header .logo svg {
@@ -159,16 +195,16 @@ body {
 
 .page-header .admin-menu .menu-heading h3 {
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.09em;
   font-size: 12px;
-  margin-top: 12px;
-  color: var(--page-header-headingColor);
+  /* margin-top: 12px; */
+  color: var(--page-labelColor);
 }
 
 .page-header .admin-menu svg {
   width: 20px;
   height: 20px;
-  fill: var(--page-header-txtColor);
+  fill: var(--page-headerIcon-color);
   margin-right: 10px;
 }
 
@@ -177,6 +213,7 @@ body {
   display: flex;
   align-items: center;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .page-header .admin-menu a:hover,
@@ -184,7 +221,7 @@ body {
 .page-header .admin-menu button:hover,
 .page-header .admin-menu button:focus {
   background: var(--page-header-bgColor-hover);
-  color: var(--blue);
+  color: var(--white);
   outline: none;
 }
 
@@ -192,7 +229,7 @@ body {
 .page-header .admin-menu a:focus svg,
 .page-header .admin-menu button:hover svg,
 .page-header .admin-menu button:focus svg {
-  fill: var(--blue);
+  fill: var(--white);
 }
 
 /* PAGE CONTENT STYLES
@@ -202,8 +239,8 @@ body {
   left: var(--page-header-width);
   width: calc(100% - var(--page-header-width));
   min-height: 100vh;
-  padding: 30px;
-  color: var(--page-content-txtColor);
+  padding: 0px 20px;
+  color: var(--page-content-blockColor);
   background: var(--page-content-bgColor);
 }
 
@@ -212,8 +249,10 @@ body {
   grid-template-columns: 1fr auto;
   grid-column-gap: 50px;
   align-items: center;
-  background: var(--page-content-bgColor);
-  margin-bottom: 30px;
+  background: var(--page-header-bgColor);
+  margin-bottom: 25px;
+  padding: 15px;
+  width: 1106px;
 }
 
 .search-and-user form {
@@ -284,10 +323,11 @@ body {
 .page-content .grid {
   display: flex;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--page-header-bgColor);
   padding: 30px;
   min-height: 80vh;
   overflow-y: scroll;
+  scrollbar-width: none;  
 }
 
 /* MQ RULES
@@ -557,7 +597,7 @@ table {
 
 /* Style the table header (table head) */
 th {
-    background-color: var(--page-header-bgColor);
+    background-color: var(--page-headerIcon-color);
     color: #fff;
     text-align: left;
     padding: 10px;
@@ -569,7 +609,8 @@ tr:nth-child(even) {
 }
 
 tr:nth-child(odd) {
-    background-color: #ffffff;
+    background-color: #24222294;
+    color: var(--page-content-txtColor);
 }
 
 /* Style table cells (table data) */
@@ -577,16 +618,18 @@ td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ccc;
+    background: var(--black);
+    color: var(--extensionButtonColor);
 }
 
 /* Style hover effect for table rows */
 tr:hover {
-    background-color: #d3d3d3;
+    background-color: #2e2b2b;
 }
 
 .den-btn{
-    background-color: var(--page-header-bgColor);
-    color: #fff;
+    background-color: #9b1c1c;
+    /* color: var(--blue); */
     padding: 10px;
     border-radius: 4px;
 }
@@ -619,7 +662,7 @@ tr:hover {
 }
 
 .den-modal-content {
-    background: #fff;
+    background: var(--page-header-bgColor);
     padding: 16px;
     border-radius: 8px;
     width: 400px; /* Adjust the width as needed */
@@ -656,7 +699,8 @@ tr:hover {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
+    background: var(--black);
 }
 
 .den-input-error{
@@ -674,6 +718,8 @@ tr:hover {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    background: none;
+    color: var(--page-content-txtColor);
 }
 
 .den-error {
@@ -688,7 +734,7 @@ tr:hover {
 }
 
 .den-close-button {
-    background-color: #fff;
+    background-color: #cf271f;
     color: var(--page-header-bgColor);
     font-weight: bold;
     border: none;
@@ -706,7 +752,7 @@ tr:hover {
   cursor: pointer;
     font-weight: bold;
   background-color: var(--page-header-bgColor);
-  color: #fff;
+  /* color: #fff; */
   box-shadow: 3px 3px 14px -2px gray;
 }
 
