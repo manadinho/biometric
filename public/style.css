@@ -8,7 +8,7 @@
   --page-header-bgColor-hover: #335a9e;
   --page-header-txtColor: #6B6B6B;
   /* --page-headerIcon-color: #5E72E4; */
-  --page-headerIcon-color: #be1109;
+  --page-headerIcon-color: #ec1848;
 
   --page-header-headingColor: #7889a4;
   --page-header-width: 220px;
@@ -78,9 +78,11 @@ label {
   cursor: pointer;
 }
 
-button,
 input {
   border: 2px solid var(--blue);
+  box-shadow: 3px 3px 14px -2px gray;
+}
+button {
   box-shadow: 3px 3px 14px -2px gray;
 }
 
@@ -146,7 +148,7 @@ body {
   font-weight: 700;
   font-size: 17px;
   font-family: 'Poppins', sans-serif !important;
-  color: #eb1616;
+  color: #ec1848;
 }
 
 .page-header .logo svg {
@@ -252,7 +254,7 @@ body {
   background: var(--page-header-bgColor);
   margin-bottom: 25px;
   padding: 15px;
-  width: 1106px;
+  width: 100%;
 }
 
 .search-and-user form {
@@ -628,7 +630,7 @@ tr:hover {
 }
 
 .den-btn{
-    background-color: #9b1c1c;
+    /* background-color: #9b1c1c; */
     /* color: var(--blue); */
     padding: 10px;
     border-radius: 4px;
@@ -682,7 +684,7 @@ tr:hover {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
-    color: #fff;
+    color: #ec1848;
     padding: 5px;
     border-radius: 4px;
 }
@@ -734,7 +736,7 @@ tr:hover {
 }
 
 .den-close-button {
-    background-color: #cf271f;
+    background-color: #fff;
     color: var(--page-header-bgColor);
     font-weight: bold;
     border: none;
