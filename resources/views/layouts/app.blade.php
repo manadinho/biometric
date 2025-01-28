@@ -219,6 +219,14 @@
               </a>
             </li>
             <li>
+              <a href="{{ route('profile.edit') }}">
+                <svg>
+                  <use xlink:href="#users"></use>
+                </svg>
+                <span>Profile</span>
+              </a>
+            </li>
+            <li>
               <!-- todo:: will be implemented later -->
               <!-- <div class="switch">
                 <input type="checkbox" id="mode" checked style="display: none;">

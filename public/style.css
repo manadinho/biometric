@@ -703,6 +703,7 @@ tr:hover {
     border: 1px solid #ccc;
     border-radius: 5px;
     background: var(--black);
+    color: var(--page-content-blockColor);
 }
 
 .den-input-error{
@@ -1016,4 +1017,25 @@ select[multiple] {
   padding: 5px;
   color: #c80505;
   margin: 5px 0px;
+}
+
+.den-profile-label {
+  margin-right: 10px;
+}
+
+.den-profile-inputs {
+  padding: 6px 3px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;  
+  border: 1px solid #ccc;
+  background: var(--black);
+  color: var(--page-content-blockColor);
+}
+
+.den-profile-buttons {
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  color: #fff;
 }

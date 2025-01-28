@@ -15,7 +15,7 @@
             <button class="den-btn den-create-btn" onclick="createUserForm()">+</button>
         </div>
         <div>
-            <input class="den-input" type="search" placeholder="Search" id="searchInput">
+            <input class="den-input" type="search" placeholder="Search" id="searchInput" onkeyup="filterUsers()">
         </div>
     </div>
 
@@ -228,6 +228,37 @@
                 }
             }
         });
+    }
+
+    function filterUsers() {
+        // Get the input value
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+
+        // Get the table body and rows
+        var tableBody = document.getElementById("den-users-table-body");
+        var rows = tableBody.getElementsByTagName("tr");
+
+        // Loop through rows and hide or show based on the search query
+        for (var i = 0; i < rows.length; i++) {
+            var nameCell = rows[i].getElementsByTagName("td")[1]; // Name column
+            var emailCell = rows[i].getElementsByTagName("td")[2]; // Email column
+
+            if (nameCell || emailCell) {
+                var nameText = nameCell.textContent || nameCell.innerText;
+                var emailText = emailCell.textContent || emailCell.innerText;
+
+                // Check if the filter matches either name or email
+                if (
+                    nameText.toUpperCase().indexOf(filter) > -1 ||
+                    emailText.toUpperCase().indexOf(filter) > -1
+                ) {
+                    rows[i].style.display = ""; // Show row
+                } else {
+                    rows[i].style.display = "none"; // Hide row
+                }
+            }
+        }
     }
 
 </script>
