@@ -12,7 +12,7 @@
             <button class="den-btn den-create-btn" onclick="createDepartmentForm()">+</button>
         </div>
         <div>
-            <input class="den-input" type="search" placeholder="Search" id="searchInput">
+            <input class="den-input" type="search" placeholder="Search" id="searchInput" onkeyup="filterdepartments()">
         </div>
     </div>
 
@@ -120,6 +120,37 @@
         toggleModal();
         document.querySelector('#department_id').value = department.id;
         document.querySelector('#name').value = department.name;
+    }
+
+    function filterdepartments() {
+        // Get the input value
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+
+        // Get the table body and rows
+        var tableBody = document.getElementById("den-departments-table-body");
+        var rows = tableBody.getElementsByTagName("tr");
+
+        // Loop through rows and hide or show based on the search query
+        for (var i = 0; i < rows.length; i++) {
+            var nameCell = rows[i].getElementsByTagName("td")[0]; // Name column
+            var totalemployeCell = rows[i].getElementsByTagName("td")[1]; // totalemploye column
+
+            if (nameCell || totalemployeCell) {
+                var nameText = nameCell.textContent || nameCell.innerText;
+                var totalemployeText = totalemployeCell.textContent || totalemploye.innerText;
+
+                // Check if the filter matches either name or totalemploye
+                if (
+                    nameText.toUpperCase().indexOf(filter) > -1 ||
+                    totalemployeText.toUpperCase().indexOf(filter) > -1
+                ) {
+                    rows[i].style.display = ""; // Show row
+                } else {
+                    rows[i].style.display = "none"; // Hide row
+                }
+            }
+        }
     }
 </script>
 @endpush

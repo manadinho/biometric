@@ -6,7 +6,7 @@
             <button class="den-btn den-create-btn" onclick="createShiftForm()">+</button>
         </div>
         <div>
-            <input class="den-input" type="search" placeholder="Search" id="searchInput">
+            <input class="den-input" type="search" placeholder="Search" id="searchInput" onkeyup="filterShifts()">
         </div>
     </div>
 
@@ -340,6 +340,33 @@
 
     function closeViewtableModal() {
         toggleModal('.view-timetable-modal');
+    }
+
+    function filterShifts() {
+        // Get the input value
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+
+        // Get the table body and rows
+        var tableBody = document.getElementById("den-shifts-table-body");
+        var rows = tableBody.getElementsByTagName("tr");
+
+        // Loop through rows and hide or show based on the search query
+        for (var i = 0; i < rows.length; i++) {
+            var nameCell = rows[i].getElementsByTagName("td")[0]; // Name column
+
+            if (nameCell) {
+                var nameText = nameCell.textContent || nameCell.innerText;
+                // Check if the filter matches either name or email
+                if (
+                    nameText.toUpperCase().indexOf(filter) > -1 
+                ) {
+                    rows[i].style.display = ""; // Show row
+                } else {
+                    rows[i].style.display = "none"; // Hide row
+                }
+            }
+        }
     }
 
     </script>

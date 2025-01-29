@@ -6,7 +6,7 @@
             <button class="den-btn den-create-btn" onclick="createTimetableForm()">+</button>
         </div>
         <div>
-            <input class="den-input" type="search" placeholder="Search" id="searchInput">
+            <input class="den-input" type="search" placeholder="Search" id="searchInput" onkeyup="filtertimetables()"> 
         </div>
     </div>
 
@@ -198,6 +198,44 @@
         toggleModal();
     }
 
+    function filtertimetables() {
+        // Get the input value
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+
+        // Get the table body and rows
+        var tableBody = document.getElementById("den-timetable-table-body");
+        var rows = tableBody.getElementsByTagName("tr");
+
+        // Loop through rows and hide or show based on the search query
+        for (var i = 0; i < rows.length; i++) {
+            var nameCell = rows[i].getElementsByTagName("td")[0]; // Name column
+            var ontimeCell = rows[i].getElementsByTagName("td")[1]; // On time column
+            var offtimeCell = rows[i].getElementsByTagName("td")[2]; // Off Time column
+            var latetimeCell = rows[i].getElementsByTagName("td")[3]; // Late Time column
+            var leaveearlytimeCell = rows[i].getElementsByTagName("td")[4]; // leaveearly column
+
+            if (nameCell || ontimeCell || offtimeCell || latetimeCell || leaveearlytimeCell) {
+                var nameText = nameCell.textContent || nameCell.innerText;
+                var ontimeText = ontimeCell.textContent || ontimeCell.innerText;
+                var offtimeText = offtimeCell.textContent || offtimeCell.innerText;
+                var latetimeText = latetimeCell.textContent || latetimeCell.innerText;
+                var leaveearlytimeText = leaveearlytimeCell.textContent || leaveearlytimeCell.innerText;
+                // Check if the filter matches either name or other columns
+                if (
+                    nameText.toUpperCase().indexOf(filter) > -1 ||
+                    ontimeText.toUpperCase().indexOf(filter) > -1 ||
+                    offtimeText.toUpperCase().indexOf(filter) > -1 ||
+                    latetimeText.toUpperCase().indexOf(filter) > -1 ||
+                    leaveearlytimeText.toUpperCase().indexOf(filter) > -1
+                ) {
+                    rows[i].style.display = ""; // Show row
+                } else {
+                    rows[i].style.display = "none"; // Hide row
+                }
+            }
+        }
+    }
 </script>
 
 <!-- todo:: move this code and other messages like error, warning, info to master layout -->

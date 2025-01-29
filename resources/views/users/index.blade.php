@@ -241,15 +241,18 @@
 
         // Loop through rows and hide or show based on the search query
         for (var i = 0; i < rows.length; i++) {
+            var idCell = rows[i].getElementsByTagName("td")[0]; // ID column
             var nameCell = rows[i].getElementsByTagName("td")[1]; // Name column
             var emailCell = rows[i].getElementsByTagName("td")[2]; // Email column
 
-            if (nameCell || emailCell) {
+            if (nameCell || emailCell || idCell) {
                 var nameText = nameCell.textContent || nameCell.innerText;
                 var emailText = emailCell.textContent || emailCell.innerText;
+                var idText = idCell.textContent || idCell.innerText;
 
                 // Check if the filter matches either name or email
                 if (
+                    idText.toUpperCase().indexOf(filter) > -1 ||
                     nameText.toUpperCase().indexOf(filter) > -1 ||
                     emailText.toUpperCase().indexOf(filter) > -1
                 ) {
