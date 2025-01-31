@@ -124,7 +124,7 @@
               <h3>Admin</h3>
             </li>
             <li>
-              <a href="javascript:void(0)" onclick="requestHtml('dashboard')">
+              <a href="javascript:void(0)" onclick="requestHtml('dashboard')" class="{{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#pages"></use>
                 </svg>
@@ -135,25 +135,25 @@
               <h3>User Managent</h3>
             </li>
             <li>
-              <a href="{{ route('users.index') }}" data-permission="USER_MANAGEMENT">
+              <a href="{{ route('users.index') }}" data-permission="USER_MANAGEMENT" class="{{ Route::currentRouteName() == 'users.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
                 <span>Users</span>
               </a>
-              <a href="{{ route('roles.index') }}" data-permission="ROLES_AND_PERMISSIONS">
+              <a href="{{ route('roles.index') }}" data-permission="ROLES_AND_PERMISSIONS"  class="{{ Route::currentRouteName() == 'roles.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
                 <span>Roles</span>
               </a>
-              <a href="{{ route('departments.index') }}" data-permission="ROLES_AND_PERMISSIONS">
+              <a href="{{ route('departments.index') }}" data-permission="ROLES_AND_PERMISSIONS"  class="{{ Route::currentRouteName() == 'departments.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
                 <span>Departments</span>
               </a>
-              <a href="{{ route('employee-transfers.index') }}" data-permission="ROLES_AND_PERMISSIONS">
+              <a href="{{ route('employee-transfers.index') }}" data-permission="ROLES_AND_PERMISSIONS" class="{{ Route::currentRouteName() == 'employee-transfers.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
@@ -164,19 +164,19 @@
               <h3>User Managent</h3>
             </li>
             <li>
-              <a href="{{ route('timetables.index') }}" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('timetables.index') }}" data-permission="TIMETABLE_MANAGEMENT"  class="{{ Route::currentRouteName() == 'timetables.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>
                 <span>Timetables</span>
               </a>
-              <a href="{{ route('shifts.index') }}" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('shifts.index') }}" data-permission="TIMETABLE_MANAGEMENT"  class="{{ Route::currentRouteName() == 'shifts.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>
                 <span>Shifts Managent</span>
               </a>
-              <a href="{{ route('employee-schedules.index') }}" data-permission="TIMETABLE_MANAGEMENT">
+              <a href="{{ route('employee-schedules.index') }}" data-permission="TIMETABLE_MANAGEMENT"  class="{{ Route::currentRouteName() == 'employee-schedules.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#collection"></use>
                 </svg>
@@ -187,43 +187,43 @@
               <h3>Settings</h3>
             </li>
             <li>
-              <a href="{{ route('settings.index') }}">
+              <a href="{{ route('settings.index') }}"  class="{{ Route::currentRouteName() == 'settings.index' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#settings"></use>
                 </svg>
                 <span>Settings</span>
               </a>
             </li>
-            <li>
+            <!-- <li>
               <a href="#0">
                 <svg>
                   <use xlink:href="#options"></use>
                 </svg>
                 <span>Options</span>
               </a>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <a href="#0">
                 <svg>
                   <use xlink:href="#charts"></use>
                 </svg>
                 <span>Charts</span>
               </a>
-            </li>
+            </li> -->
             <li>
-              <a href="{{ route('logout') }}">
-                <svg>
-                  <use xlink:href="#logout"></use>
-                </svg>
-                <span>Logout</span>
-              </a>
-            </li>
-            <li>
-              <a href="{{ route('profile.edit') }}">
+              <a href="{{ route('profile.edit') }}"  class="{{ Route::currentRouteName() == 'profile.edit' ? 'active' : '' }}">
                 <svg>
                   <use xlink:href="#users"></use>
                 </svg>
                 <span>Profile</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('logout') }}"  class="{{ Route::currentRouteName() == 'logout' ? 'active' : '' }}">
+                <svg>
+                  <use xlink:href="#logout"></use>
+                </svg>
+                <span>Logout</span>
               </a>
             </li>
             <li>

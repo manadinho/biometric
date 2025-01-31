@@ -97,6 +97,11 @@ body {
   font-weight: 550;
 }
 
+.active {
+  background: var(--page-header-bgColor-hover);
+  color: #fff;
+}
+
 /* HEADER STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .page-header {
